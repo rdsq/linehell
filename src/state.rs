@@ -4,19 +4,19 @@ use super::func::LangFunc;
 use super::parse_line::ParsedLine;
 use super::var_state::VarState;
 
-pub struct State {
-    pub var_state: VarState, // because of some mut borrowing issues
+pub struct State<'a> {
+    pub var_state: &'a mut VarState, // because of some mut borrowing issues
     functions: HashMap<String, Box<dyn LangFunc>>,
     pub current_block: Option<Vec<ParsedLine>>,
 }
 
-impl State {
-    pub fn new() -> Self {
+impl <'a>State<'a> {
+    pub fn new(var_state: &'a mut VarState) -> State<'a> {
         let mut functions = HashMap::new();
         super::builtins::init_builtins(&mut functions);
         Self {
             functions,
-            var_state: VarState::new(),
+            var_state,
             current_block: None,
         }
     }

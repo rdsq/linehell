@@ -1,8 +1,10 @@
 use super::parse_line::parse_line;
 use super::state::State;
+use super::var_state::VarState;
 
 pub fn repl() {
-    let mut state = State::new();
+    let mut var_state = VarState::new();
+    let mut state = State::new(&mut var_state);
     loop {
         let mut input = String::new();
         let bytes_read = std::io::stdin().read_line(&mut input).unwrap();

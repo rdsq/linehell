@@ -1,19 +1,17 @@
 use super::func::BuiltinFunc;
 use super::data_types::DataTypes;
 use std::io::{self, Write};
+use super::var_state::VarState;
 
-fn run_block(block: &Vec<super::parse_line::ParsedLine>, name: &str) -> DataTypes {
-    let mut internal_state = super::state::State::new();
+fn run_block(state: &mut VarState, block: &Vec<super::parse_line::ParsedLine>, name: &str) -> DataTypes {
+    let mut internal_state = super::state::State::new(state);
     for (i, line) in block.iter().enumerate() {
-        if line.func == "break" {
-            break;
-        }
         internal_state.interpret_line(&line);
-        if let DataTypes::Err(err) = internal_state.var_state.context_var {
+        if let DataTypes::Err(err) = &internal_state.var_state.context_var {
             return DataTypes::Err(format!("[in block \"{}\":{}] {}", name, i+1, err));
         }
     }
-    internal_state.var_state.context_var
+    internal_state.var_state.context_var.clone()
 }
 
 pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn super::func::LangFunc>>) {
@@ -137,7 +135,7 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
         "run".to_string(),
         Box::new(BuiltinFunc::new(Box::new(|args, state| {
             return if let DataTypes::Block(lines) = state.get_var(&args) {
-                run_block(&lines, &args)
+                run_block(state, &lines, &args)
             } else {
                 DataTypes::Err("Not a block".to_string())
             }
@@ -151,9 +149,9 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
             return if let (Some(condition), Some(if_block_var), Some(else_block_var)) = (sp.next(), sp.next(), sp.next()) {
                 return if let (DataTypes::Block(if_block), DataTypes::Block(else_block)) = (state.get_var(if_block_var), state.get_var(else_block_var)) {
                     return if state.get_var(condition).to_bool() {
-                        run_block(&if_block, if_block_var)
+                        run_block(state, &if_block, if_block_var)
                     } else {
-                        run_block(&else_block, else_block_var)
+                        run_block(state, &else_block, else_block_var)
                     }
                 } else {
                     DataTypes::Err("if and else statements must be blocks".to_string())
@@ -174,6 +172,25 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
                 }
             }
             DataTypes::Bool(true)
+        }))),
+    );
+    // loop
+    functions.insert(
+        "while".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            return if let (Some(condition), Some(block_var)) = (sp.next(), sp.next()) {
+                return if let DataTypes::Block(block) = state.get_var(block_var) {
+                    while state.get_var(condition).to_bool() {
+                        run_block(state, &block, block_var);
+                    }
+                    DataTypes::None
+                } else {
+                    DataTypes::Err("the loop must be a block".to_string())
+                }
+            } else {
+                DataTypes::Err("Incorrect `while <condition> <block>` format".to_string())
+            }
         }))),
     );
 }
