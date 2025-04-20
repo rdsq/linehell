@@ -64,6 +64,8 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
                         "-" => DataTypes::Number(num1 - num2),
                         "*" => DataTypes::Number(num1 * num2),
                         "/" => DataTypes::Number(num1 / num2),
+                        "<" => DataTypes::Bool(num1 < num2),
+                        ">" => DataTypes::Bool(num1 > num2),
                         _ => DataTypes::Err("Unknown operator".to_string()),
                     };
                 } else {
