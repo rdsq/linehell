@@ -8,6 +8,10 @@ pub fn cli() {
             eprintln!("Provide the file path");
             exit(1);
         });
+    if &path == "--help" || &path == "-h" {
+        println!("Linelang: a super mimimalistic programming language");
+        return;
+    }
     let content = std::fs::read_to_string(&path)
         .unwrap_or_else(|err| {
             eprintln!("Failed to read the file: {}", err);
@@ -18,6 +22,8 @@ pub fn cli() {
     let resulting = state.interpret(parsed);
     if let Err((message, line)) = resulting {
         eprintln!("Error (:{}): {}", line + 1, message);
+        eprintln!("-----");
+        eprintln!("{}", content.split('\n').nth(line).unwrap());
         exit(1);
     }
 }
