@@ -1,7 +1,7 @@
 #[derive(Clone)]
 pub enum DataTypes {
     String(String),
-    Int(i32),
+    Number(f32),
     Bool(bool),
     None,
     Err(String),

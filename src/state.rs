@@ -18,7 +18,7 @@ impl State {
             functions,
         }
     }
-    pub fn get_va(&self, name: &str) -> DataTypes {
+    pub fn get_var(&self, name: &str) -> DataTypes {
         if name == "that" {
             return self.context_var.clone();
         }
@@ -26,5 +26,8 @@ impl State {
             Some(value) => value.clone(),
             None => DataTypes::None,
         }
+    }
+    pub fn set_var(&mut self, key: String, value: DataTypes) {
+        self.variables.insert(key, value);
     }
 }
