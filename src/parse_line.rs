@@ -18,7 +18,7 @@ fn parse_functional_line(line: &str) -> ParsedLine {
 }
 
 pub fn parse_line(line: &str) -> Option<ParsedLine> {
-    let trimmed = line.trim();
+    let trimmed = line.trim_start();
     if trimmed == "" {
         return None;
     } else {
