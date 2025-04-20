@@ -1,7 +1,6 @@
 use super::parse_module::parse_module;
 use super::state::State;
 use std::process::exit;
-use super::data_types::DataTypes;
 
 pub fn cli() {
     let path = std::env::args().nth(1)

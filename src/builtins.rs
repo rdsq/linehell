@@ -54,7 +54,7 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
                 } else {
                     is_first = false;
                 }
-                print!("{:?}", state.get_var(val)); // temporary
+                print!("{}", state.get_var(val).to_string());
             }
             println!();
             DataTypes::None
