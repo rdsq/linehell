@@ -23,27 +23,6 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
             DataTypes::String(args) // that simple
         }))),
     );
-    // create number
-    functions.insert(
-        "number".to_string(),
-        Box::new(BuiltinFunc::new(Box::new(|args, _state| {
-            return match args.parse::<f32>() {
-                Ok(num) => DataTypes::Number(num),
-                Err(err) => DataTypes::Err(err.to_string()),
-            }
-        }))),
-    );
-    // create boolean
-    functions.insert(
-        "bool".to_string(),
-        Box::new(BuiltinFunc::new(Box::new(|args, _state| {
-            return match &args as &str {
-                "true" => DataTypes::Bool(true),
-                "false" => DataTypes::Bool(false),
-                _ => DataTypes::Err("Unknown boolean value".to_string()),
-            }
-        }))),
-    );
     // output
     functions.insert(
         "print".to_string(),
@@ -85,12 +64,27 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
     );
     // convert to number
     functions.insert(
-        "to-number".to_string(),
+        "number".to_string(),
         Box::new(BuiltinFunc::new(Box::new(|args, state| {
             if let DataTypes::String(arg) = state.get_var(&args) {
                 return match arg.parse::<f32>() {
                     Ok(num) => DataTypes::Number(num),
                     Err(err) => DataTypes::Err(err.to_string()),
+                }
+            } else {
+                return DataTypes::Err("Not a string".to_string());
+            }
+        }))),
+    );
+    // convert to boolean
+    functions.insert(
+        "bool".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            if let DataTypes::String(arg) = state.get_var(&args) {
+                return match &arg as &str {
+                    "true" => DataTypes::Bool(true),
+                    "false" => DataTypes::Bool(false),
+                    _ => DataTypes::Err("Unknown boolean value".to_string()),
                 }
             } else {
                 return DataTypes::Err("Not a string".to_string());
