@@ -5,6 +5,9 @@ use std::io::{self, Write};
 fn run_block(block: &Vec<super::parse_line::ParsedLine>, name: &str) -> DataTypes {
     let mut internal_state = super::state::State::new();
     for (i, line) in block.iter().enumerate() {
+        if line.func == "break" {
+            break;
+        }
         internal_state.interpret_line(&line);
         if let DataTypes::Err(err) = internal_state.var_state.context_var {
             return DataTypes::Err(format!("[in block \"{}\":{}] {}", name, i+1, err));
