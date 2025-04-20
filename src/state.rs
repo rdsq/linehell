@@ -32,10 +32,9 @@ impl State {
         self.variables.insert(key, value);
     }
     pub fn run_func(&mut self, name: &str, args: String) -> DataTypes {
-        if let Some(func) = self.functions.get(name) {
-            return func.call(args, &mut self);
-        } else {
-            return DataTypes::Err("Unknown function".to_string());
+        return match self.functions.get(name) {
+            Some(func) => func.call(args, self),
+            None => DataTypes::Err("Unknown function".to_string()),
         }
     }
     pub fn interpret(&mut self, parsed: Vec<ParsedLineMeta>) -> Result<(), (String, usize)> {
