@@ -5,8 +5,14 @@ mod state;
 mod parse_line;
 mod parse_module;
 mod var_state;
-mod cli;
+mod file_interpret;
+mod repl;
 
 fn main() {
-    cli::cli();
+    if let Some(path) = std::env::args().nth(1) {
+        file_interpret::file_interpret(&path);
+    } else {
+        println!("Linelang REPL");
+        repl::repl();
+    }
 }

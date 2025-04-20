@@ -5,7 +5,7 @@ use super::parse_line::ParsedLine;
 use super::var_state::VarState;
 
 pub struct State {
-    var_state: VarState,
+    pub var_state: VarState,
     functions: HashMap<String, Box<dyn LangFunc>>,
 }
 
