@@ -1,4 +1,4 @@
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum DataTypes {
     String(String),
     Number(f32),
@@ -17,6 +17,14 @@ impl DataTypes {
             Self::None      => "none".to_string(),
             Self::Err(v)    => format!("Error: {}", v),
             Self::Block(v)  => format!("{{\n{}\n}}", v.iter().map(|x| x.to_string()).collect::<Vec<String>>().join("\n")),
+        }
+    }
+    pub fn to_bool(&self) -> bool {
+        return match self {
+            Self::Bool(b) => *b,
+            Self::None => false,
+            Self::Err(_) => false,
+            _ => true,
         }
     }
 }

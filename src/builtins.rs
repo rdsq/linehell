@@ -2,6 +2,17 @@ use super::func::BuiltinFunc;
 use super::data_types::DataTypes;
 use std::io::{self, Write};
 
+fn run_block(block: &Vec<super::parse_line::ParsedLine>, name: &str) -> DataTypes {
+    let mut internal_state = super::state::State::new();
+    for (i, line) in block.iter().enumerate() {
+        internal_state.interpret_line(&line);
+        if let DataTypes::Err(err) = internal_state.var_state.context_var {
+            return DataTypes::Err(format!("[in block \"{}\":{}] {}", name, i+1, err));
+        }
+    }
+    internal_state.var_state.context_var
+}
+
 pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn super::func::LangFunc>>) {
     // set variable
     functions.insert(
@@ -122,18 +133,44 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
     functions.insert(
         "run".to_string(),
         Box::new(BuiltinFunc::new(Box::new(|args, state| {
-            let mut internal_state = super::state::State::new();
             return if let DataTypes::Block(lines) = state.get_var(&args) {
-                for (i, line) in lines.iter().enumerate() {
-                    internal_state.interpret_line(&line);
-                    if let DataTypes::Err(err) = internal_state.var_state.context_var {
-                        return DataTypes::Err(format!("[in block \"{}\":{}] {}", args, i+1, err));
-                    }
-                }
-                internal_state.var_state.context_var
+                run_block(&lines, &args)
             } else {
                 DataTypes::Err("Not a block".to_string())
             }
+        }))),
+    );
+    // if else block
+    functions.insert(
+        "if-else".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            return if let (Some(condition), Some(if_block_var), Some(else_block_var)) = (sp.next(), sp.next(), sp.next()) {
+                return if let (DataTypes::Block(if_block), DataTypes::Block(else_block)) = (state.get_var(if_block_var), state.get_var(else_block_var)) {
+                    return if state.get_var(condition).to_bool() {
+                        run_block(&if_block, if_block_var)
+                    } else {
+                        run_block(&else_block, else_block_var)
+                    }
+                } else {
+                    DataTypes::Err("if and else statements must be blocks".to_string())
+                }
+            } else {
+                DataTypes::Err("Incorrect `if-else <condition> <if> <else>` format".to_string())
+            }
+        }))),
+    );
+    // check if items are equal
+    functions.insert(
+        "equal".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let sp: Vec<&str> = args.split_whitespace().collect();
+            for i in &sp {
+                if state.get_var(&i) != state.get_var(&sp[0]) {
+                    return DataTypes::Bool(false);
+                }
+            }
+            DataTypes::Bool(true)
         }))),
     );
 }
