@@ -2,6 +2,7 @@ use super::func::BuiltinFunc;
 use super::data_types::DataTypes;
 use std::io::{self, Write};
 use super::var_state::VarState;
+use std::collections::HashMap;
 
 fn run_block(state: &mut VarState, block: &Vec<super::parse_line::ParsedLine>, name: &str) -> DataTypes {
     let mut internal_state = super::state::State::new(state);
@@ -14,7 +15,7 @@ fn run_block(state: &mut VarState, block: &Vec<super::parse_line::ParsedLine>, n
     internal_state.var_state.context_var.clone()
 }
 
-pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn super::func::LangFunc>>) {
+pub fn init_builtins(functions: &mut HashMap<String, Box<dyn super::func::LangFunc>>) {
     // set variable
     functions.insert(
         "set".to_string(),
@@ -192,6 +193,65 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
                 }
             } else {
                 DataTypes::Err("Incorrect `while <condition> <block>` format".to_string())
+            }
+        }))),
+    );
+    // create table
+    functions.insert(
+        "table".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|_args, _state| {
+            DataTypes::Table(HashMap::new())
+        }))),
+    );
+    // insert table
+    functions.insert(
+        "tableinsert".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            return if let (Some(table_name), Some(key), Some(value)) = (sp.next(), sp.next(), sp.next()) {
+                return if let DataTypes::Table(table) = state.get_var(table_name) {
+                    let mut table = table.clone();
+                    table.insert(key.to_string(), state.get_var(value));
+                    DataTypes::Table(table)
+                } else {
+                    DataTypes::Err("not a table".to_string())
+                }
+            } else {
+                DataTypes::Err("incorrect `tableinsert <table> <key> <value>` format".to_string())
+            }
+        }))),
+    );
+    // remove table key
+    functions.insert(
+        "tableremovekey".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            return if let (Some(table_name), Some(key)) = (sp.next(), sp.next()) {
+                return if let DataTypes::Table(table) = state.get_var(table_name) {
+                    let mut table = table.clone();
+                    table.remove(key);
+                    DataTypes::Table(table)
+                } else {
+                    DataTypes::Err("not a table".to_string())
+                }
+            } else {
+                DataTypes::Err("incorrect `tableremovekey <table> <key>` format".to_string())
+            }
+        }))),
+    );
+    // table get value
+    functions.insert(
+        "tableget".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            return if let (Some(table_name), Some(key)) = (sp.next(), sp.next()) {
+                return if let DataTypes::Table(table) = state.get_var(table_name) {
+                    table.get(key).unwrap_or(&DataTypes::None).clone()
+                } else {
+                    DataTypes::Err("not a table".to_string())
+                }
+            } else {
+                DataTypes::Err("incorrect `tableget <table> <key>` format".to_string())
             }
         }))),
     );

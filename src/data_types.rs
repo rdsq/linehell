@@ -6,6 +6,7 @@ pub enum DataTypes {
     None,
     Err(String),
     Block(Vec<super::parse_line::ParsedLine>),
+    Table(std::collections::HashMap<String, DataTypes>),
 }
 
 impl DataTypes {
@@ -17,6 +18,7 @@ impl DataTypes {
             Self::None      => "none".to_string(),
             Self::Err(v)    => format!("Error: {}", v),
             Self::Block(v)  => format!("{{\n{}\n}}", v.iter().map(|x| x.to_string()).collect::<Vec<String>>().join("\n")),
+            Self::Table(v)  => format!("{:?}", v),
         }
     }
     pub fn to_bool(&self) -> bool {
