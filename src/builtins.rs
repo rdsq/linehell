@@ -60,4 +60,26 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
             DataTypes::None
         }))),
     );
+    // arithmetic operations
+    functions.insert(
+        "math".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut sp = args.split_whitespace();
+            if let (Some(arg1), Some(operator), Some(arg2)) = (sp.next(), sp.next(), sp.next()) {
+                if let (DataTypes::Number(num1), DataTypes::Number(num2)) = (state.get_var(arg1), state.get_var(arg2)) {
+                    return match operator {
+                        "+" => DataTypes::Number(num1 + num2),
+                        "-" => DataTypes::Number(num1 - num2),
+                        "*" => DataTypes::Number(num1 * num2),
+                        "/" => DataTypes::Number(num1 / num2),
+                        _ => DataTypes::Err("Unknown operator".to_string()),
+                    };
+                } else {
+                    DataTypes::Err("Cannot do math with non numbers".to_string())
+                }
+            } else {
+                DataTypes::Err("Incorrect `math <num1> <operator> <num2>` format".to_string())
+            }
+        }))),
+    );
 }
