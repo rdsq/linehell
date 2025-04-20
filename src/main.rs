@@ -12,7 +12,7 @@ fn main() {
     if let Some(path) = std::env::args().nth(1) {
         file_interpret::file_interpret(&path);
     } else {
-        println!("Linelang REPL");
+        println!("Linehell REPL");
         repl::repl();
     }
 }

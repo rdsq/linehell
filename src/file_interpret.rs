@@ -6,7 +6,7 @@ use super::var_state::VarState;
 
 pub fn file_interpret(path: &str) {
     if path == "--help" || path == "-h" {
-        println!("Linelang: a super mimimalistic programming language");
+        println!("Linehell: a super mimimalistic programming language");
         return;
     }
     let content = std::fs::read_to_string(path)
