@@ -5,7 +5,8 @@ mod state;
 mod parse_line;
 mod parse_module;
 mod var_state;
+mod cli;
 
 fn main() {
-    println!("Hello, world!");
+    cli::cli();
 }
