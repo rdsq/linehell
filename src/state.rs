@@ -24,11 +24,7 @@ impl State {
             None => DataTypes::Err("Unknown function".to_string()),
         }
     }
-    pub fn interpret_line(&mut self, line: &ParsedLine) -> Result<(), String> {
+    pub fn interpret_line(&mut self, line: &ParsedLine) {
         self.var_state.context_var = self.run_func(&line.func, line.args.to_string());
-        if let DataTypes::Err(err) = &self.var_state.context_var {
-            return Err(err.to_string());
-        }
-        Ok(())
     }
 }

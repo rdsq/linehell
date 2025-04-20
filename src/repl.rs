@@ -11,7 +11,7 @@ pub fn repl() {
         }
         input.pop();
         if let Some(parsed) = parse_line(&input) {
-            let _ = state.interpret_line(&parsed);
+            state.interpret_line(&parsed);
             println!("\x1b[2m{}\x1b[0m", state.var_state.context_var.to_string());
         }
     }
