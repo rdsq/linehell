@@ -5,6 +5,7 @@ pub enum DataTypes {
     Bool(bool),
     None,
     Err(String),
+    Block(Vec<super::parse_line::ParsedLine>),
 }
 
 impl DataTypes {
@@ -15,6 +16,7 @@ impl DataTypes {
             Self::Bool(v)   => v.to_string(),
             Self::None      => "none".to_string(),
             Self::Err(v)    => format!("Error: {}", v),
+            Self::Block(v)  => format!("{{\n{}\n}}", v.iter().map(|x| x.to_string()).collect::<Vec<String>>().join("\n")),
         }
     }
 }

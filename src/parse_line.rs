@@ -1,6 +1,13 @@
+#[derive(Clone, Debug)]
 pub struct ParsedLine {
     pub func: String,
     pub args: String,
+}
+
+impl ParsedLine {
+    pub fn to_string(&self) -> String {
+        format!("{} {}", self.func, self.args)
+    }
 }
 
 fn parse_functional_line(line: &str) -> ParsedLine {
