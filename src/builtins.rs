@@ -1,5 +1,6 @@
 use super::func::BuiltinFunc;
 use super::data_types::DataTypes;
+use std::io::{self, Write};
 
 pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn super::func::LangFunc>>) {
     // set variable
@@ -80,6 +81,47 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
             } else {
                 DataTypes::Err("Incorrect `math <num1> <operator> <num2>` format".to_string())
             }
+        }))),
+    );
+    // convert to number
+    functions.insert(
+        "to-number".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            if let DataTypes::String(arg) = state.get_var(&args) {
+                return match arg.parse::<f32>() {
+                    Ok(num) => DataTypes::Number(num),
+                    Err(err) => DataTypes::Err(err.to_string()),
+                }
+            } else {
+                return DataTypes::Err("Not a string".to_string());
+            }
+        }))),
+    );
+    // output without new line
+    functions.insert(
+        "printnonl".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut is_first = true;
+            for val in args.split_whitespace() {
+                if !is_first {
+                    print!(" ");
+                } else {
+                    is_first = false;
+                }
+                print!("{}", state.get_var(val).to_string());
+            }
+            io::stdout().flush().unwrap();
+            DataTypes::None
+        }))),
+    );
+    // stdin input
+    functions.insert(
+        "input".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|_args, _state| {
+            let mut input = String::new();
+            io::stdin().read_line(&mut input).unwrap();
+            input.pop(); // remove the \n
+            DataTypes::String(input)
         }))),
     );
 }
