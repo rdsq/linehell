@@ -211,7 +211,7 @@ pub fn init_builtins(functions: &mut HashMap<String, Box<dyn super::func::LangFu
             return if let (Some(table_name), Some(key), Some(value)) = (sp.next(), sp.next(), sp.next()) {
                 return if let DataTypes::Table(table) = state.get_var(table_name) {
                     let mut table = table.clone();
-                    table.insert(key.to_string(), state.get_var(value));
+                    table.insert(state.get_var(key).to_string(), state.get_var(value));
                     DataTypes::Table(table)
                 } else {
                     DataTypes::Err("not a table".to_string())
@@ -229,7 +229,7 @@ pub fn init_builtins(functions: &mut HashMap<String, Box<dyn super::func::LangFu
             return if let (Some(table_name), Some(key)) = (sp.next(), sp.next()) {
                 return if let DataTypes::Table(table) = state.get_var(table_name) {
                     let mut table = table.clone();
-                    table.remove(key);
+                    table.remove(&state.get_var(key).to_string());
                     DataTypes::Table(table)
                 } else {
                     DataTypes::Err("not a table".to_string())
@@ -246,7 +246,7 @@ pub fn init_builtins(functions: &mut HashMap<String, Box<dyn super::func::LangFu
             let mut sp = args.split_whitespace();
             return if let (Some(table_name), Some(key)) = (sp.next(), sp.next()) {
                 return if let DataTypes::Table(table) = state.get_var(table_name) {
-                    table.get(key).unwrap_or(&DataTypes::None).clone()
+                    table.get(&state.get_var(key).to_string()).unwrap_or(&DataTypes::None).clone()
                 } else {
                     DataTypes::Err("not a table".to_string())
                 }
