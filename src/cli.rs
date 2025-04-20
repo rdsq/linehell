@@ -19,11 +19,13 @@ pub fn cli() {
         });
     let parsed = parse_module(&content);
     let mut state = State::new();
-    let resulting = state.interpret(parsed);
-    if let Err((message, line)) = resulting {
-        eprintln!("Error (:{}): {}", line + 1, message);
-        eprintln!("-----");
-        eprintln!("{}", content.split('\n').nth(line).unwrap());
-        exit(1);
+    for line in parsed {
+        let resulting = state.interpret_line(&line.line);
+        if let Err(message) = resulting {
+            eprintln!("Error (:{}): {}", line.line_number + 1, message);
+            eprintln!("-----");
+            eprintln!("{} {}", line.line.func, line.line.args);
+            exit(1);
+        }
     }
 }

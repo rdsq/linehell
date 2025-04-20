@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use super::data_types::DataTypes;
 use super::func::LangFunc;
-use super::parse_module::ParsedLineMeta;
+use super::parse_line::ParsedLine;
 use super::var_state::VarState;
 
 pub struct State {
@@ -24,12 +24,10 @@ impl State {
             None => DataTypes::Err("Unknown function".to_string()),
         }
     }
-    pub fn interpret(&mut self, parsed: Vec<ParsedLineMeta>) -> Result<(), (String, usize)> {
-        for line in parsed {
-            self.var_state.context_var = self.run_func(&line.line.func, line.line.args);
-            if let DataTypes::Err(err) = &self.var_state.context_var {
-                return Err((err.to_string(), line.line_number));
-            }
+    pub fn interpret_line(&mut self, line: &ParsedLine) -> Result<(), String> {
+        self.var_state.context_var = self.run_func(&line.func, line.args.to_string());
+        if let DataTypes::Err(err) = &self.var_state.context_var {
+            return Err(err.to_string());
         }
         Ok(())
     }
