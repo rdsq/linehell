@@ -118,4 +118,22 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
             DataTypes::String(input)
         }))),
     );
+    // run a block
+    functions.insert(
+        "run".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            let mut internal_state = super::state::State::new();
+            return if let DataTypes::Block(lines) = state.get_var(&args) {
+                for (i, line) in lines.iter().enumerate() {
+                    internal_state.interpret_line(&line);
+                    if let DataTypes::Err(err) = internal_state.var_state.context_var {
+                        return DataTypes::Err(format!("[in block \"{}\":{}] {}", args, i+1, err));
+                    }
+                }
+                internal_state.var_state.context_var
+            } else {
+                DataTypes::Err("Not a block".to_string())
+            }
+        }))),
+    );
 }
