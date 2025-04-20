@@ -18,17 +18,28 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
     // create string
     functions.insert(
         "str".to_string(),
-        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+        Box::new(BuiltinFunc::new(Box::new(|args, _state| {
             DataTypes::String(args) // that simple
         }))),
     );
     // create number
     functions.insert(
         "number".to_string(),
-        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+        Box::new(BuiltinFunc::new(Box::new(|args, _state| {
             return match args.parse::<f32>() {
                 Ok(num) => DataTypes::Number(num),
                 Err(err) => DataTypes::Err(err.to_string()),
+            }
+        }))),
+    );
+    // create boolean
+    functions.insert(
+        "bool".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, _state| {
+            return match &args as &str {
+                "true" => DataTypes::Bool(true),
+                "false" => DataTypes::Bool(false),
+                _ => DataTypes::Err("Unknown boolean value".to_string()),
             }
         }))),
     );
@@ -36,7 +47,6 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
     functions.insert(
         "print".to_string(),
         Box::new(BuiltinFunc::new(Box::new(|args, state| {
-            let mut sp = args.split_whitespace();
             let mut is_first = true;
             for val in args.split_whitespace() {
                 if !is_first {
@@ -44,7 +54,7 @@ pub fn init_builtins(functions: &mut std::collections::HashMap<String, Box<dyn s
                 } else {
                     is_first = false;
                 }
-                print!("{:?}", val); // temporary
+                print!("{:?}", state.get_var(val)); // temporary
             }
             println!();
             DataTypes::None
