@@ -4,6 +4,7 @@ mod builtins;
 mod state;
 mod parse_line;
 mod parse_module;
+mod var_state;
 
 fn main() {
     println!("Hello, world!");
