@@ -255,4 +255,21 @@ pub fn init_builtins(functions: &mut HashMap<String, Box<dyn super::func::LangFu
             }
         }))),
     );
+    // add strings
+    functions.insert(
+        "concat".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|args, state| {
+            DataTypes::String(args.split_whitespace()
+                .map(|x| state.get_var(x).to_string())
+                .collect::<Vec<String>>()
+                .join(""))
+        }))),
+    );
+    // put a new line in the buffer
+    functions.insert(
+        "newlinestr".to_string(),
+        Box::new(BuiltinFunc::new(Box::new(|_args, _state| {
+            DataTypes::String("\n".to_string())
+        }))),
+    );
 }
