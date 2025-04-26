@@ -106,7 +106,7 @@ Because **normal languages are for cowards**
 
 It is made in **Rust**, so the whole process is pretty simple. Just make sure you have **Cargo**
 
-Just clone this repository, run `cargp run`, that's all
+Just clone this repository, run `cargo run`, that's all
 
 You can run REPL, execute a file, it's all intuitive
 
