@@ -17,16 +17,11 @@ If you think normal programming languages are too easy, linehell is here to fix 
 
 ## Core principles
 
-- **One line = one operation**
-You cannot assign and calculate at once
-You cannot even assign a literal at once
+- **One line = one operation**. You cannot assign and calculate at once. You cannot even assign a literal at once
 
-- **No nested expressions**
-Not even `a = 1`. First, create a string, then convert it, then assign
+- **No nested expressions**. Not even `a = 1`. First, create a string, then convert it, then assign
 
-- **`that` is your god**
-Every operation works by putting a result into a special magical buffer called `that`
-Next line reads from it. And the next. And the next.
+- **`that` is your god**. Every operation works by putting a result into a special magical buffer called `that`. Next line reads from it. And the next. And the next
 
 ## Examples
 
@@ -107,7 +102,7 @@ Because **normal languages are for cowards**
 
 - **Stable?** As stable as your sanity
 
-## Installations & Usage
+## Installation & Usage
 
 It is made in **Rust**, so the whole process is pretty simple. Just make sure you have **Cargo**
 
