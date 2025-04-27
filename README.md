@@ -97,15 +97,15 @@ You can run REPL, execute a file, it's all intuitive
 
 - `str <string>` - initialize a **string** literal. You can then access it from `that`
 
-- `print <values>` - **print** something to stdout with a new line
+- `print <values>` - **print** something to stdout with a new line. *No literals*
 
 - `math <num1> <operation> <num2>` - do **math**. *Again, no literals*. Supported operations: `+` `-` `*` `/` `>` `<`
 
 - `number <from>` - convert a string to a **number**. Again, no literals
 
-- `bool <from>` - initialize a **boolean** value from a string
+- `bool <from>` - initialize a **boolean** value from a string. *Still no literals*
 
-- `printnonl <values>` - like **print**, but without **new line**
+- `printnonl <values>` - like **print**, but without **new line**. *LiTeRaLs again*
 
 - `input` - get **input** from **stdin**
 
@@ -113,7 +113,7 @@ You can run REPL, execute a file, it's all intuitive
 
 - `if-else <condition> <if-block> <else-block>` - **if else** logic. If `condition` is `true`, run the `if-block`. If not, `else-block`
 
-- `equal <values>` - check if values are **equal**
+- `equal <values>` - check if values are **equal**. *(Not literals by the way)*
 
 - `while <condition> <block>` - run a **while loop**. As long as `condition` is true, run `block`
 
@@ -123,8 +123,8 @@ You can run REPL, execute a file, it's all intuitive
 
 - `tableinsert <table> <key> <value>` - **insert** a value to the given key. *(LITERALS)*
 
-- `tableremove <table> <key>` - **remove** a value of a table by its key
+- `tableremove <table> <key>` - **remove** a value of a table by its key. *Yeah, you guessed it, literals*
 
-- `concat <values>` - **concatenate** strings
+- `concat <values>` - **concatenate** strings. *Do I need to write that again?*
 
 - `newlinestr` - put the **new line character** into the buffer
