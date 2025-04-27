@@ -1,19 +1,6 @@
 # linehell
 
-> a programming language where nesting is illegal and suffering is mandatory
-
-## What is this?
-
-**linehell** is a minimalist, maximalist, line-based, anti-nesting programming language.
-It was built to provide an authentic experience of:
-
-- extreme verbosity
-
-- total lack of comfort
-
-- deep spiritual suffering
-
-If you think normal programming languages are too easy, linehell is here to fix that
+A language where nesting is illegal and extreme verbosity is mandatory
 
 ## Core principles
 
@@ -21,7 +8,7 @@ If you think normal programming languages are too easy, linehell is here to fix 
 
 - **No nested expressions**. Not even `a = 1`. First, create a string, then convert it, then assign
 
-- **`that` is your god**. Every operation works by putting a result into a special magical buffer called `that`. Next line reads from it. And the next. And the next
+- **`that` ties it together**. Every operation works by putting a result into a special magical buffer called `that`. Next line reads from it. And the next. And the next
 
 ## Examples
 
@@ -88,19 +75,13 @@ if-else that stop-loop void
 while run-loop that
 ```
 
-## Why?
-
-Because **you can**
-Because **life is too short for convenient syntax**
-Because **normal languages are for cowards**
-
 ## Status
 
 - **Unfinished?** Maybe
 
 - **Usable?** Technically, yes
 
-- **Stable?** As stable as your sanity
+- **Stable?** Does it matter anyways?
 
 ## Installation & Usage
 
