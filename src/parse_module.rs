@@ -7,7 +7,7 @@ pub struct ParsedLineMeta {
 
 pub fn parse_module(content: &str) -> Vec<ParsedLineMeta> {
     let mut lines = Vec::new();
-    for (i, line) in content.split('\n').enumerate() {
+    for (i, line) in content.lines().enumerate() {
         if i == 0 && line.starts_with("#!") {
             // ignore shebangs
             continue;
