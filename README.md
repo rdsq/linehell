@@ -91,6 +91,12 @@ Just clone this repository, run `cargo run`, that's all
 
 You can run REPL, execute a file, it's all intuitive
 
+To install it, you can run:
+
+```sh
+cargo install --git https://github.com/rdsq/linehell
+```
+
 ## Functions
 
 - `set <name> <value>` - set a **variable**. Just don't forget that `value` is **not** a literal
